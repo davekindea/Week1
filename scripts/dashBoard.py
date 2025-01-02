@@ -3,6 +3,8 @@ import pandas as pd
 import matplotlib.pyplot as plt 
 import numpy as np
 import os
+import nltk
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 
 
@@ -251,6 +253,147 @@ st.pyplot(fig)
 
 
 
+st.subheader("Text Analysis(Sentiment analysis & Topic Modeling)")
+sentiment_data=data.copy()
+SIA=SentimentIntensityAnalyzer()
+sentiment_data['sentiment'] = sentiment_data['headline'].apply(lambda x: SIA.polarity_scores(text=x)['compound'])
+sentiment_data["sentiment_cata"]=pd.cut(sentiment_data["sentiment"], bins=[ -1,-0.5,-0.0001,0.5,1], labels=["very negative", "negative", "nutral","postive"])
+sentiment_data_count=sentiment_data["sentiment_cata"].value_counts()
+sentiment_data_count_data=sentiment_data_count.reset_index()
+sentiment_data_count_data.columns=["sentiment_cata","Count"]
+plt.figure(figsize=(15, 6))
+
+# Plotting the bar chart
+plt.bar(sentiment_data_count_data["sentiment_cata"], sentiment_data_count_data["Count"], color='skyblue', edgecolor='black')
+
+# Adding labels and title
+plt.xlabel("Sentiment Category", fontsize=12, fontweight='bold')
+plt.ylabel("Count", fontsize=12, fontweight='bold')
+plt.title("Sentiment Category Count", fontsize=14, fontweight='bold')
+
+# Rotating x-axis labels for better readability
+plt.xticks(rotation=45, ha="right")
+
+# Adjust layout for better spacing
+plt.tight_layout()
+st.pyplot(plt)
 
 
+sentiment_data["year"] = sentiment_data.index.year
+sentiment_data["month"] = sentiment_data.index.month
+sentiment_data["day"] = sentiment_data.index.day
+sentiment_data["WeekDay"] = sentiment_data.index.weekday
+sentiment_data["Hour"] = sentiment_data.index.hour
+sentiment_data["year_month"] = sentiment_data.index.to_period("M")
 
+year_sentiment_counts = sentiment_data.groupby(["year_month", "sentiment_cata"]).size().reset_index(name="count")
+pivot_table_yealy = year_sentiment_counts.pivot(index="year_month", columns="sentiment_cata", values="count").fillna(0)
+pivot_table_yealy.head()
+pivot_table_yealy.index = pivot_table_yealy.index.astype(str)
+
+st.sidebar.header("📊 Sentiment Analysis Dashboard")
+selected_view = st.sidebar.radio("Select View", ["Yearly Trends", "Monthly Trends", "Daily Trends"])
+
+# ---- Yearly Trends ----
+if selected_view == "Yearly Trends":
+    st.subheader("📆 **Yearly Sentiment Trends**")
+    
+    yearly_sentiment_counts = sentiment_data.groupby(["year", "sentiment_cata"]).size().reset_index(name="count")
+    pivot_table_year = yearly_sentiment_counts.pivot(index="year", columns="sentiment_cata", values="count").fillna(0)
+    
+    # Line Plot for Trends
+    fig, ax = plt.subplots(figsize=(15, 6))
+    ax.plot(pivot_table_year.index, pivot_table_year.get("very negative", 0), color="red", label="Very Negative")
+    ax.plot(pivot_table_year.index, pivot_table_year.get("negative", 0), color="green", label="Negative")
+    ax.plot(pivot_table_year.index, pivot_table_year.get("nutral", 0), color="yellow", label="Neutral")
+    ax.plot(pivot_table_year.index, pivot_table_year.get("postive", 0), color="brown", label="Positive")
+    
+    ax.set_title("Sentiment Trends Over the Years", fontsize=14, fontweight='bold')
+    ax.set_xlabel("Year", fontsize=12)
+    ax.set_ylabel("Count", fontsize=12)
+    ax.legend(title="Sentiment", loc="upper left")
+    ax.grid(True, linestyle='--', alpha=0.5)
+    
+    st.pyplot(fig)
+
+    # Bar Plot
+    st.write("### 📊 Sentiment Counts by Year")
+    fig, ax = plt.subplots(figsize=(12, 6))
+    pivot_table_year.plot(kind='bar', ax=ax, colormap='viridis')
+    ax.set_title("Sentiment Counts by Year", fontsize=14, fontweight='bold')
+    ax.set_xlabel("Year", fontsize=12)
+    ax.set_ylabel("Count", fontsize=12)
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    st.pyplot(fig)
+
+# ---- Monthly Trends ----
+elif selected_view == "Monthly Trends":
+    st.subheader("📅 **Monthly Sentiment Trends**")
+    
+    monthly_sentiment_counts = sentiment_data.groupby(["month", "sentiment_cata"]).size().reset_index(name="count")
+    pivot_table_month = monthly_sentiment_counts.pivot(index="month", columns="sentiment_cata", values="count").fillna(0)
+    
+    st.write("### 📊 Sentiment Counts by Month")
+    fig, ax = plt.subplots(figsize=(12, 6))
+    pivot_table_month.plot(kind='bar', ax=ax, colormap='coolwarm')
+    ax.set_title("Sentiment Counts by Month", fontsize=14, fontweight='bold')
+    ax.set_xlabel("Month", fontsize=12)
+    ax.set_ylabel("Count", fontsize=12)
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    st.pyplot(fig)
+
+# ---- Daily Trends ----
+elif selected_view == "Daily Trends":
+    st.subheader("📆 **Daily Sentiment Trends**")
+    
+    daily_sentiment_counts = sentiment_data.groupby(["day", "sentiment_cata"]).size().reset_index(name="count")
+    pivot_table_day = daily_sentiment_counts.pivot(index="day", columns="sentiment_cata", values="count").fillna(0)
+    
+    st.write("### 📊 Sentiment Counts by Day")
+    fig, ax = plt.subplots(figsize=(12, 6))
+    pivot_table_day.plot(kind='bar', ax=ax, colormap='plasma')
+    ax.set_title("Sentiment Counts by Day", fontsize=14, fontweight='bold')
+    ax.set_xlabel("Day", fontsize=12)
+    ax.set_ylabel("Count", fontsize=12)
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    st.pyplot(fig)
+
+publisher_sentiment = sentiment_data.groupby('publisher')['sentiment'].mean().sort_values()
+
+st.title("📅 **Monthly Sentiment Trend Analysis**")
+st.write("Explore how **average sentiment scores** fluctuate over months.")
+
+# Resample data by Month
+monthly_sentiment = sentiment_data['sentiment'].resample('M').mean().dropna()
+
+# Insights for Highest and Lowest Sentiment Months
+st.subheader("📊 **Key Insights**")
+if not monthly_sentiment.empty:
+    highest_month = monthly_sentiment.idxmax().strftime('%B %Y')
+    lowest_month = monthly_sentiment.idxmin().strftime('%B %Y')
+    col1, col2 = st.columns(2)
+    with col1:
+        st.success(f"😊 **Highest Sentiment Month:** {highest_month} ({monthly_sentiment.max():.2f})")
+    with col2:
+        st.error(f"😞 **Lowest Sentiment Month:** {lowest_month} ({monthly_sentiment.min():.2f})")
+else:
+    st.warning("No data available for sentiment analysis.")
+
+# Plot Monthly Sentiment Trend
+st.write("### 📈 **Average Sentiment Score by Month**")
+fig, ax = plt.subplots(figsize=(12, 6))
+ax.plot(monthly_sentiment.index, monthly_sentiment.values, marker='o', linestyle='-', color='#4B9CD3', label='Avg Sentiment')
+ax.fill_between(monthly_sentiment.index, monthly_sentiment.values, color='#D6EAF8', alpha=0.4)
+
+ax.set_title('Average Sentiment Score by Month', fontsize=14, fontweight='bold', pad=20)
+ax.set_xlabel('Month', fontsize=12)
+ax.set_ylabel('Average Sentiment Score', fontsize=12)
+ax.legend(loc='upper right')
+ax.grid(True, linestyle='--', alpha=0.5)
+plt.xticks(rotation=45, ha='right')
+plt.tight_layout()
+
+st.pyplot(fig)
