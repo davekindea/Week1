@@ -43,7 +43,7 @@ st.set_page_config(page_title="Nova Financial Solutions", page_icon=":bar-chart:
 data=pd.read_csv(data_path)
 st.title("Nova Financial Solutionn Dataset Analysis")
 
-image_path = '../notebooks/data/predictive.jpg'
+image_path = os.path.join(current_dir,'../notebooks/data/predictive.jpg')
 
 # Open image using PIL
 image = Image.open(image_path)
