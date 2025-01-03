@@ -131,7 +131,7 @@ The dataset consists of two main components:
 ### Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/project-repo.git
+git clone https://github.com/davekindea/Week1.git
 ```
 
 ### Navigate to the project folder:
@@ -149,4 +149,4 @@ streamlit run dashBoard.py
 ## 🚀 Live Dashboard
 
 Explore the interactive dashboard for real-time insights and visualizations here:  
-👉 [View Live Dashboard](https://yourdashboardlink.com)
+👉 [View Live Dashboard](https://novafinancial.streamlit.app/)
