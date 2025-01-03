@@ -96,11 +96,7 @@ The dataset consists of two main components:
 - Accuracy of technical indicators.
 - Completeness of analysis.
 
-## ✅ Minimum Essential To-Do:
 
-- Merge branches from task-2 into main.
-- Create a new branch task-3.
-- Commit changes with descriptive messages.
 
 ## 📊 3️⃣ Task 3: Correlation Between News and Stock Movements
 
@@ -113,10 +109,7 @@ The dataset consists of two main components:
 - Sentiment analysis accuracy.
 - Correlation strength.
 
-✅ **Minimum Essential To-Do:**
-- Merge branches from task-3 into main.
-- Create a new branch task-4.
-- Commit changes with descriptive messages.
+
 
 ## 🛠️ Tools & Technologies
 
