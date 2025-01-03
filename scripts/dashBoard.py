@@ -2,9 +2,17 @@ import streamlit as st
 import pandas as pd 
 import matplotlib.pyplot as plt 
 import numpy as np
+import seaborn as sns
 import os
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+import re
+from rake_nltk import Rake
+from collections import Counter
+import itertools
+from wordcloud import WordCloud
+import plotly.graph_objects as go
+
 
 
 
@@ -12,6 +20,237 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 # Build the file path dynamically
 current_dir = os.path.dirname(os.path.abspath(__file__))
 data_path = os.path.join(current_dir, "../notebooks/data/raw_analyst_ratings.csv")
+data_AAPL=os.path.join(current_dir, "../notebooks/data/yfinance_data/AAPL_historical_data.csv")
+data_path_AMZN=os.path.join(current_dir, "../notebooks/data/yfinance_data/AMZN_historical_data.csv")
+data_path_GOOG=os.path.join(current_dir, "../notebooks/data/yfinance_data/GOOG_historical_data.csv")
+data_path_META=os.path.join(current_dir, "../notebooks/data/yfinance_data/META_historical_data.csv")
+data_path_MSFT=os.path.join(current_dir, "../notebooks/data/yfinance_data/MSFT_historical_data.csv")
+data_path_NAVD=os.path.join(current_dir, "../notebooks/data/yfinance_data/NAVD_historical_data.csv")
+data_path_TSLA=os.path.join(current_dir, "../notebooks/data/yfinance_data/TSLA_historical_data.csv")
+
+data1=pd.read_csv(data_AAPL)
+
+st.title("📈 **Stock Price Analysis Dashboard**")
+st.write("Explore the **Closing Price Trends** of the stock over time.")
+
+# Plot with Plotly
+st.subheader("📊 **Stock Closing Price Over Time**")
+
+fig = go.Figure()
+
+fig.add_trace(go.Scatter(
+    x=data1.index,
+    y=data1['Close'],
+    mode='lines+markers',
+    name='Close Price',
+    line=dict(color='#4B9CD3', width=2),
+    marker=dict(size=4, color='#1F77B4', symbol='circle')
+))
+
+# Customize layout
+fig.update_layout(
+    title='Stock Analysis: Closing Price Over Time',
+    xaxis_title='Date',
+    yaxis_title='Close Price',
+    xaxis=dict(showgrid=True, gridcolor='lightgrey'),
+    yaxis=dict(showgrid=True, gridcolor='lightgrey'),
+    template='plotly_white',
+    hovermode='x unified',
+    margin=dict(l=50, r=50, t=50, b=50)
+)
+
+# Display Plot
+st.plotly_chart(fig, use_container_width=True)
+
+
+
+data1['SMA_50'] = data1['Close'].rolling(window=50).mean()
+data1['SMA_200'] = data1['Close'].rolling(window=200).mean()
+
+# Streamlit App Title
+st.title("📈 **Stock Price with Moving Averages**")
+st.write("Analyze **Stock Prices** along with **50-day** and **200-day Moving Averages**.")
+
+# Plot with Plotly
+fig = go.Figure()
+
+fig.add_trace(go.Scatter(
+    x=data1.index,
+    y=data1['Close'],
+    mode='lines',
+    name='Close Price',
+    line=dict(color='#1f77b4', width=2)
+))
+
+fig.add_trace(go.Scatter(
+    x=data1.index,
+    y=data1['SMA_50'],
+    mode='lines',
+    name='50-day SMA',
+    line=dict(color='#ff7f0e', width=2, dash='dash')
+))
+
+fig.add_trace(go.Scatter(
+    x=data1.index,
+    y=data1['SMA_200'],
+    mode='lines',
+    name='200-day SMA',
+    line=dict(color='#2ca02c', width=2, dash='dot')
+))
+
+# Customize layout
+fig.update_layout(
+    title='📊 Stock Price with Moving Averages',
+    xaxis_title='Date',
+    yaxis_title='Price',
+    legend_title='Legend',
+    xaxis=dict(showgrid=True, gridcolor='lightgrey'),
+    yaxis=dict(showgrid=True, gridcolor='lightgrey'),
+    template='plotly_white',
+    hovermode='x unified',
+    margin=dict(l=50, r=50, t=50, b=50)
+)
+
+# Display Plot in Streamlit
+st.plotly_chart(fig, use_container_width=True)
+
+
+
+def calculate_RSI(data, window=14):
+    delta = np.diff(data)
+    gain = np.where(delta > 0, delta, 0)
+    loss = np.where(delta < 0, -delta, 0)
+    
+    avg_gain = np.convolve(gain, np.ones(window), 'valid') / window
+    avg_loss = np.convolve(loss, np.ones(window), 'valid') / window
+    
+    rs = avg_gain / avg_loss
+    rsi = 100 - (100 / (1 + rs))
+    
+    rsi = np.concatenate([np.full(window, np.nan), rsi])
+    return rsi
+
+# Add RSI to DataFrame
+data1['RSI'] = calculate_RSI(data1['Close'].values)
+
+# Streamlit App Title
+st.title("📊 **Relative Strength Index (RSI)**")
+st.write("Analyze the **RSI Indicator** to identify overbought and oversold conditions in stock prices.")
+
+# Plot RSI with Plotly
+fig = go.Figure()
+
+fig.add_trace(go.Scatter(
+    x=data1.index,
+    y=data1['RSI'],
+    mode='lines',
+    name='RSI',
+    line=dict(color='#1f77b4', width=2)
+))
+
+# Add Overbought and Oversold Lines
+fig.add_hline(y=70, line_dash='dash', line_color='red', annotation_text='Overbought (70)')
+fig.add_hline(y=30, line_dash='dash', line_color='green', annotation_text='Oversold (30)')
+
+# Customize layout
+fig.update_layout(
+    title='📈 Relative Strength Index (RSI)',
+    xaxis_title='Date',
+    yaxis_title='RSI Value',
+    legend_title='Legend',
+    xaxis=dict(showgrid=True, gridcolor='lightgrey'),
+    yaxis=dict(showgrid=True, gridcolor='lightgrey'),
+    template='plotly_white',
+    hovermode='x unified',
+    margin=dict(l=50, r=50, t=50, b=50)
+)
+
+# Display Plot in Streamlit
+st.plotly_chart(fig, use_container_width=True)
+
+
+
+def calculate_EMA(data, window):
+    alpha = 2 / (window + 1)
+    ema = np.zeros_like(data)
+    ema[window-1] = np.mean(data[:window])
+    for i in range(window, len(data)):
+        ema[i] = alpha * (data[i] - ema[i-1]) + ema[i-1]
+    return ema
+
+# MACD Calculation Function
+def calculate_MACD(data, short_window=12, long_window=26, signal_window=9):
+    ema_short = calculate_EMA(data, short_window)
+    ema_long = calculate_EMA(data, long_window)
+    macd = ema_short - ema_long
+    signal_line = calculate_EMA(macd, signal_window)
+    macd_histogram = macd - signal_line
+    return macd, signal_line, macd_histogram
+
+# Add MACD to DataFrame
+data1['MACD'], data1['Signal Line'], data1['MACD Histogram'] = calculate_MACD(data1['Close'].values)
+
+# Streamlit App Title
+st.title("📊 **MACD (Moving Average Convergence Divergence)**")
+st.write("""
+The **MACD Indicator** helps traders understand momentum and trend direction.
+It consists of:
+- **MACD Line:** Difference between short-term and long-term EMAs.
+- **Signal Line:** EMA of the MACD Line.
+- **Histogram:** Difference between MACD and Signal Line.
+""")
+
+# Plot MACD with Plotly
+fig = go.Figure()
+
+# Add MACD Line
+fig.add_trace(go.Scatter(
+    x=data1.index,
+    y=data1['MACD'],
+    mode='lines',
+    name='MACD',
+    line=dict(color='blue', width=2)
+))
+
+# Add Signal Line
+fig.add_trace(go.Scatter(
+    x=data1.index,
+    y=data1['Signal Line'],
+    mode='lines',
+    name='Signal Line',
+    line=dict(color='red', width=2, dash='dot')
+))
+
+# Add Histogram
+fig.add_trace(go.Bar(
+    x=data1.index,
+    y=data1['MACD Histogram'],
+    name='MACD Histogram',
+    marker=dict(color='gray')
+))
+
+# Customize layout
+fig.update_layout(
+    title='📈 Moving Average Convergence Divergence (MACD)',
+    xaxis_title='Date',
+    yaxis_title='Value',
+    legend_title='Legend',
+    xaxis=dict(showgrid=True, gridcolor='lightgrey'),
+    yaxis=dict(showgrid=True, gridcolor='lightgrey'),
+    template='plotly_white',
+    hovermode='x unified',
+    margin=dict(l=50, r=50, t=50, b=50)
+)
+
+# Display Plot in Streamlit
+st.plotly_chart(fig, use_container_width=True)
+
+
+
+
+
+
+
 
 st.set_page_config(page_title="Nova Financial Solutions", page_icon=":bar-chart:", layout="wide")
 data=pd.read_csv(data_path)
@@ -126,15 +365,9 @@ st.pyplot(fig)
 
 data.set_index('date', inplace=True)
 monthly_counts = data.resample('M').size()
-
-# --- 📊 Visualization in Streamlit ---
 st.subheader("📅 **Number of Articles Published Per Month**")
-
-# Create Plot
 fig, ax = plt.subplots(figsize=(12, 6))
 ax.plot(monthly_counts.index, monthly_counts.values, marker='o', linestyle='-', color='#43A047', linewidth=2, label='Monthly Count')
-
-# Add Labels and Title
 ax.set_xlabel('Date', fontsize=12, fontweight='bold')
 ax.set_ylabel('Number of Articles', fontsize=12, fontweight='bold')
 ax.set_title('📊 Monthly Trend of Published Articles', fontsize=14, fontweight='bold', pad=20)
@@ -146,28 +379,16 @@ st.pyplot(fig)
 
 
 yearly_count = publication_date.groupby('Year').size().reset_index(name='count')
-
-# --- 📆 Visualization in Streamlit ---
 st.subheader("📆 **Number of Publications per Year**")
-
-# Create Plot
 fig, ax = plt.subplots(figsize=(12, 6))
 bars = ax.bar(yearly_count['Year'], yearly_count['count'], color='#4CAF50', edgecolor='black')
-
-# Add Labels and Title
 ax.set_xlabel('Year', fontsize=12, fontweight='bold')
 ax.set_ylabel('Number of Publications', fontsize=12, fontweight='bold')
 ax.set_title('📊 Yearly Trend of Published Articles', fontsize=14, fontweight='bold', pad=20)
-
-# Add Value Labels on Bars
 for bar in bars:
     yval = bar.get_height()
     ax.text(bar.get_x() + bar.get_width()/2, yval + 1, int(yval), ha='center', va='bottom', fontsize=10, color='black')
-
-# Rotate X-axis labels for readability
 ax.tick_params(axis='x', rotation=45, labelsize=10)
-
-# Add Gridlines for better readability
 ax.yaxis.grid(True, linestyle='--', alpha=0.5)
 plt.tight_layout()
 st.pyplot(fig)
@@ -396,4 +617,147 @@ ax.grid(True, linestyle='--', alpha=0.5)
 plt.xticks(rotation=45, ha='right')
 plt.tight_layout()
 
+st.pyplot(fig)
+
+
+
+sentiment_data["length_of_heading"] = sentiment_data["headline"].apply(len)
+
+# Calculate average headline length per sentiment category
+sentiment_length = sentiment_data.groupby('sentiment_cata')['length_of_heading'].mean().sort_values()
+
+# Streamlit Title
+st.title("📰 **Average Headline Length by Sentiment Category**")
+st.write("Explore how the **average length of headlines** varies across different sentiment categories.")
+
+# Plot Configuration
+fig, ax = plt.subplots(figsize=(10, 6))
+sns.barplot(
+    x=sentiment_length.index, 
+    y=sentiment_length.values, 
+    palette="coolwarm",
+    edgecolor='black'
+)
+
+# Add labels and title
+ax.set_title('📏 Average Headline Length by Sentiment Category', fontsize=14, fontweight='bold', pad=20)
+ax.set_xlabel('Sentiment Category', fontsize=12, fontweight='bold')
+ax.set_ylabel('Average Headline Length', fontsize=12, fontweight='bold')
+ax.bar_label(ax.containers[0], fmt='%.1f', fontsize=10, label_type='edge', padding=3)
+
+# Style the plot
+sns.despine()
+plt.xticks(rotation=45, ha='right')
+plt.tight_layout()
+
+# Display in Streamlit
+st.pyplot(fig)
+
+
+
+
+def clean_text(text):
+    text = text.lower()  # Lowercase text
+    text = re.sub(r'[^\w\s]', '', text)  # Remove punctuation
+    return text
+
+# Apply text cleaning
+sentiment_data['cleaned_text'] =sentiment_data['headline'].apply(clean_text)
+
+
+r=Rake()
+
+def extract_keywords(text):
+    if pd.isnull(text) or text.strip() == "":
+        return []
+    r.extract_keywords_from_text(text)
+    return r.get_ranked_phrases()
+
+sentiment_data['keywords'] = sentiment_data['cleaned_text'].apply(extract_keywords)
+
+all_keywords = itertools.chain.from_iterable(sentiment_data['keywords'])
+
+# Count keywords
+keyword_counts = Counter(all_keywords)
+
+# Convert to a DataFrame and sort
+keyword_df = pd.DataFrame(keyword_counts.items(), columns=['Keyword', 'Frequency'])
+keyword_df = keyword_df.sort_values(by='Frequency', ascending=False).reset_index(drop=True)
+
+
+st.title("☁️ **Word Cloud of Keywords**")
+st.write("Visualize the most frequently occurring **keywords** in your dataset with this interactive Word Cloud.")
+
+# Generate the Word Cloud
+wordcloud = WordCloud(
+    width=1000,
+    height=500,
+    background_color='white',
+    colormap='coolwarm',
+    max_words=100,
+    contour_color='steelblue',
+    contour_width=1
+).generate_from_frequencies(keyword_counts)
+
+# Plot Configuration
+fig, ax = plt.subplots(figsize=(12, 6))
+ax.imshow(wordcloud, interpolation='bilinear')
+ax.axis('off')
+st.pyplot(fig)
+st.markdown("### 📝 **Insights:**")
+st.write("""
+- Larger words indicate higher frequency.
+- Use this Word Cloud to quickly identify the most important keywords in your dataset.
+""")
+
+
+data['publication_date'] = data['date'].str.split(' ').str[0]
+data['publication_time'] = data['date'].str.split(' ').str[1]
+data['publication_date'] = pd.to_datetime(data['publication_date'])
+data['publication_hour'] = data['publication_time'].str[:2]
+data.sort_values('date', inplace=True)
+
+# Streamlit App Title
+st.title("📰 **Article Publication Trends Dashboard**")
+st.write("Explore trends in article publications over different time periods.")
+
+# Sidebar Selection
+st.sidebar.header("🔄 **Select Trend View**")
+trend_option = st.sidebar.radio(
+    "Choose Time Frame",
+    ["Daily", "Monthly", "Yearly", "Hourly"]
+)
+
+# Plot Based on Selection
+st.subheader(f"📊 **Number of Articles Published Over {trend_option}**")
+
+fig, ax = plt.subplots(figsize=(12, 6))
+sns.set_style("whitegrid")
+
+if trend_option == "Daily":
+    particular_day = data.groupby(data['publication_date'].dt.date).size()
+    sns.lineplot(x=particular_day.index, y=particular_day.values, marker='o', color='#4B9CD3', ax=ax)
+    ax.set_title('Number of Articles Published Over Time (Daily)', fontsize=14, fontweight='bold')
+
+elif trend_option == "Monthly":
+    particular_month = data.groupby(data['publication_date'].dt.month).size()
+    sns.lineplot(x=particular_month.index, y=particular_month.values, marker='o', color='#FFB347', ax=ax)
+    ax.set_title('Number of Articles Published Over Each Month', fontsize=14, fontweight='bold')
+    ax.set_xticks(range(1, 13))
+    ax.set_xticklabels(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
+
+elif trend_option == "Yearly":
+    particular_year = data.groupby(data['publication_date'].dt.year).size()
+    sns.lineplot(x=particular_year.index, y=particular_year.values, marker='o', color='#77DD77', ax=ax)
+    ax.set_title('Number of Articles Published Per Year', fontsize=14, fontweight='bold')
+
+elif trend_option == "Hourly":
+    hourly_counts = data.groupby('publication_hour').size()
+    sns.lineplot(x=hourly_counts.index, y=hourly_counts.values, marker='o', color='#F28585', ax=ax)
+    ax.set_title('Number of Articles Published Per Hour', fontsize=14, fontweight='bold')
+
+# Labels and Grid
+ax.set_xlabel(trend_option, fontsize=12)
+ax.set_ylabel('Number of Articles', fontsize=12)
+ax.tick_params(axis='x', rotation=45)
 st.pyplot(fig)
