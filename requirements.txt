@@ -1,7 +1,9 @@
 streamlit
 pandas
-seaborn
 matplotlib
+seaborn
+nltk
+rake-nltk
 plotly
-scipy
-numpy
+pillow
+wordcloud
