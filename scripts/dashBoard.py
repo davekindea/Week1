@@ -436,7 +436,8 @@ sns.barplot(
     x='sentiment_cata',
     y='length_of_heading',
     palette="coolwarm",
-    edgecolor='black'
+    edgecolor='black',
+    legend=False  # Explicitly disable legend since hue isn't used
 )
 
 # Customize Plot Aesthetics
