@@ -16,8 +16,9 @@ import plotly.express as px
 import plotly.figure_factory as ff
 from PIL import Image
 import matplotlib
+import matplotlib.font_manager
 
-
+plt.rcParams['font.family'] = 'DejaVu Sans'
 
 
 # Build the file path dynamically
@@ -34,6 +35,8 @@ data_path_TSLA=os.path.join(current_dir, "../notebooks/data/yfinance_data/TSLA_h
 sn_data_path=os.path.join(current_dir, "../notebooks/data/sentiment_data.csv")
 
 st.set_page_config(page_title="Nova Financial Solutions", page_icon=":bar-chart:", layout="wide", initial_sidebar_state="expanded" )
+
+
 
 
 
