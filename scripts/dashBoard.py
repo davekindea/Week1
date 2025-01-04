@@ -57,7 +57,7 @@ st.image(image)
 
 
 
-st.header("📝 Dataset Column Descriptions")
+st.header(" Dataset Column Descriptions")
 
 # Display column descriptions
 st.markdown("""
@@ -79,16 +79,16 @@ num_rows,num_cols=data.shape
 col1, col2 = st.columns(2)
 
 with col1:
-    st.info(f"**📊 Number of Rows:** `{num_rows}`")
+    st.info(f"** Number of Rows:** `{num_rows}`")
 
 with col2:
-    st.success(f"**📊 Number of Columns:** `{num_cols}`")
+    st.success(f"** Number of Columns:** `{num_cols}`")
 
 
 st.divider()
 
 
-with st.expander("🔍 **View Dataset Description**"):
+with st.expander(" **View Dataset Description**"):
     st.write("Below is the statistical summary of the dataset:")
     st.dataframe(data.describe())
 
@@ -100,7 +100,7 @@ publishers_data.columns = ['Publisher', 'Count']
 top_10_publisher=publishers_data.head(10)
 colors = ['#4CAF50', '#FF9800', '#2196F3', '#9C27B0', '#FFEB3B', '#673AB7', '#E91E63', '#00BCD4', '#FFC107', '#795548']
 
-st.subheader("📚 **Top 10 Publisher Count**")
+st.subheader(" **Top 10 Publisher Count**")
 fig, ax = plt.subplots(figsize=(15, 6))
 ax.bar(top_10_publisher["Publisher"], top_10_publisher["Count"], color=colors, edgecolor='black')
 ax.set_xlabel("Publisher Name", fontsize=12)
@@ -117,7 +117,7 @@ publisher_count_url=publishers_by_url.reset_index()
 publisher_count_url.columns=["Url","Count"]
 
 top_10_url=publisher_count_url.head(10)
-st.subheader("📚 **Top 10 Urls Count**")
+st.subheader(" **Top 10 Urls Count**")
 fig, ax = plt.subplots(figsize=(15, 6))
 ax.bar(top_10_url["Url"], top_10_url["Count"], color=colors, edgecolor='black')
 ax.set_xlabel("Url", fontsize=12)
@@ -135,12 +135,12 @@ publication_date["date_format"] = pd.to_datetime(publication_date["date_format"]
 publication_date["Year"] = publication_date["date_format"].dt.year
 publication_date["Month"] = publication_date["date_format"].dt.month
 publication_date["Day"] = publication_date["date_format"].dt.day
-st.subheader("📅 **Trend of Publications Per Day**")
+st.subheader("**Trend of Publications Per Day**")
 fig, ax = plt.subplots(figsize=(12, 6))
 ax.plot(publication_date['date_format'], publication_date['count'], marker='o', color='#1E88E5', linestyle='-', linewidth=2)
 ax.set_xlabel('Date', fontsize=12, fontweight='bold')
 ax.set_ylabel('Number of Publications', fontsize=12, fontweight='bold')
-ax.set_title('📈 Trend of Publications Per Day', fontsize=14, fontweight='bold', pad=20)
+ax.set_title(' Trend of Publications Per Day', fontsize=14, fontweight='bold', pad=20)
 ax.tick_params(axis='x', rotation=45, labelsize=10)
 ax.yaxis.grid(True, linestyle='--', alpha=0.5)
 fig.subplots_adjust(top=0.9, bottom=0.1)
@@ -151,12 +151,12 @@ plt.close(fig)
 st.divider()
 data.set_index('date', inplace=True)
 monthly_counts = data.resample('ME').size()
-st.subheader("📅 **Number of Articles Published Per Month**")
+st.subheader(" **Number of Articles Published Per Month**")
 fig, ax = plt.subplots(figsize=(12, 6))
 ax.plot(monthly_counts.index, monthly_counts.values, marker='o', linestyle='-', color='#43A047', linewidth=2, label='Monthly Count')
 ax.set_xlabel('Date', fontsize=12, fontweight='bold')
 ax.set_ylabel('Number of Articles', fontsize=12, fontweight='bold')
-ax.set_title('📊 Monthly Trend of Published Articles', fontsize=14, fontweight='bold', pad=20)
+(' Monthly Trend of Published Articles', fontsize=14, fontweight='bold', pad=20)
 ax.legend(fontsize=10, loc='upper left')
 ax.tick_params(axis='x', rotation=45, labelsize=10)
 ax.yaxis.grid(True, linestyle='--', alpha=0.5)
@@ -166,12 +166,12 @@ st.pyplot(fig)
 plt.close(fig)
 st.divider()
 yearly_count = publication_date.groupby('Year').size().reset_index(name='count')
-st.subheader("📆 **Number of Publications per Year**")
+st.subheader("**Number of Publications per Year**")
 fig, ax = plt.subplots(figsize=(12, 6))
 bars = ax.bar(yearly_count['Year'], yearly_count['count'], color='#4CAF50', edgecolor='black')
 ax.set_xlabel('Year', fontsize=12, fontweight='bold')
 ax.set_ylabel('Number of Publications', fontsize=12, fontweight='bold')
-ax.set_title('📊 Yearly Trend of Published Articles', fontsize=14, fontweight='bold', pad=20)
+ax.set_title('Yearly Trend of Published Articles', fontsize=14, fontweight='bold', pad=20)
 for bar in bars:
     yval = bar.get_height()
     ax.text(bar.get_x() + bar.get_width()/2, yval + 1, int(yval), ha='center', va='bottom', fontsize=10, color='black')
@@ -188,13 +188,13 @@ month_labels = [
     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
 ]
 monthly_count['Month'] = monthly_count['Month'].apply(lambda x: month_labels[x-1])
-st.subheader("📅 **Number of Publications per Month**")
+st.subheader(" **Number of Publications per Month**")
 fig, ax = plt.subplots(figsize=(15, 6))
 colors = plt.cm.viridis(np.linspace(0.2, 0.8, len(monthly_count)))
 bars = ax.bar(monthly_count['Month'], monthly_count['count'], color=colors, edgecolor='black')
 ax.set_xlabel('Month', fontsize=12, fontweight='bold')
 ax.set_ylabel('Number of Publications', fontsize=12, fontweight='bold')
-ax.set_title('📊 Monthly Trend of Published Articles', fontsize=14, fontweight='bold', pad=20)
+ax.set_title(' Monthly Trend of Published Articles', fontsize=14, fontweight='bold', pad=20)
 for bar in bars:
     yval = bar.get_height()
     ax.text(bar.get_x() + bar.get_width()/2, yval + 1, int(yval), ha='center', va='bottom', fontsize=10, color='black')
@@ -211,13 +211,13 @@ plt.close(fig)
 st.divider()
 daily_count = publication_date.groupby('Day').size().reset_index(name='count')
 
-st.subheader("📅 **Number of Publications per Day**")
+st.subheader(" **Number of Publications per Day**")
 fig, ax = plt.subplots(figsize=(15, 6))
 colors = plt.cm.viridis(np.linspace(0.2, 0.8, len(daily_count)))
 bars = ax.bar(daily_count['Day'], daily_count['count'], color=colors, edgecolor='black')
 ax.set_xlabel('Day', fontsize=12, fontweight='bold')
 ax.set_ylabel('Number of Publications', fontsize=12, fontweight='bold')
-ax.set_title('📊 Daily Trend of Published Articles', fontsize=14, fontweight='bold', pad=20)
+ax.set_title(' Daily Trend of Published Articles', fontsize=14, fontweight='bold', pad=20)
 for bar in bars:
     yval = bar.get_height()
     ax.text(bar.get_x() + bar.get_width()/2, yval + 1, int(yval), ha='center', va='bottom', fontsize=10, color='black')
@@ -242,7 +242,7 @@ data.set_index('date', inplace=True)
 publication_date = pd.DataFrame()
 publication_date['Hour'] = data.index.hour
 hourly_data = publication_date.groupby("Hour").size().reset_index(name="count")
-st.subheader("⏰ **Number of Publications per Hour**")
+st.subheader(" **Number of Publications per Hour**")
 
 
 fig, ax = plt.subplots(figsize=(15, 6))
@@ -252,7 +252,7 @@ bars = ax.bar(hourly_data["Hour"], hourly_data["count"], color=colors, edgecolor
 
 ax.set_xlabel('Hour of the Day', fontsize=12, fontweight='bold')
 ax.set_ylabel('Number of Publications', fontsize=12, fontweight='bold')
-ax.set_title('📊 Hourly Trend of Published Articles', fontsize=14, fontweight='bold', pad=20)
+ax.set_title('Hourly Trend of Published Articles', fontsize=14, fontweight='bold', pad=20)
 
 
 for bar in bars:
@@ -307,12 +307,12 @@ pivot_table_yealy.index = pivot_table_yealy.index.astype(str)
 dataset_options = [
     'AAPL', 'AMZN', 'GOOG', 'META', 'MSFT', 'TSLA', 'NAVD'
 ]
-st.title("📊 Sentiment Analysis Dashboard")
+st.title(" Sentiment Analysis Dashboard")
 selected_view = st.selectbox("Select View", ["Yearly Trends", "Monthly Trends", "Daily Trends"])
 
 
 if selected_view == "Yearly Trends":
-    st.subheader("📆 **Yearly Sentiment Trends**")
+    st.subheader(" **Yearly Sentiment Trends**")
     
     yearly_sentiment_counts = sentiment_data.groupby(["year", "sentiment_cata"]).size().reset_index(name="count")
     pivot_table_year = yearly_sentiment_counts.pivot(index="year", columns="sentiment_cata", values="count").fillna(0)
@@ -334,7 +334,7 @@ if selected_view == "Yearly Trends":
     plt.close(fig)
 
     # Bar Plot
-    st.write("### 📊 Sentiment Counts by Year")
+    st.write("### Sentiment Counts by Year")
     fig, ax = plt.subplots(figsize=(12, 6))
     pivot_table_year.plot(kind='bar', ax=ax, colormap='viridis')
     ax.set_title("Sentiment Counts by Year", fontsize=14, fontweight='bold')
@@ -348,12 +348,12 @@ if selected_view == "Yearly Trends":
 
 # ---- Monthly Trends ----
 elif selected_view == "Monthly Trends":
-    st.subheader("📅 **Monthly Sentiment Trends**")
+    st.subheader(" **Monthly Sentiment Trends**")
     
     monthly_sentiment_counts = sentiment_data.groupby(["month", "sentiment_cata"]).size().reset_index(name="count")
     pivot_table_month = monthly_sentiment_counts.pivot(index="month", columns="sentiment_cata", values="count").fillna(0)
     
-    st.write("### 📊 Sentiment Counts by Month")
+    st.write("### Sentiment Counts by Month")
     fig, ax = plt.subplots(figsize=(12, 6))
     pivot_table_month.plot(kind='bar', ax=ax, colormap='coolwarm')
     ax.set_title("Sentiment Counts by Month", fontsize=14, fontweight='bold')
@@ -366,12 +366,12 @@ elif selected_view == "Monthly Trends":
 
 # ---- Daily Trends ----
 elif selected_view == "Daily Trends":
-    st.subheader("📆 **Daily Sentiment Trends**")
+    st.subheader("**Daily Sentiment Trends**")
     
     daily_sentiment_counts = sentiment_data.groupby(["day", "sentiment_cata"]).size().reset_index(name="count")
     pivot_table_day = daily_sentiment_counts.pivot(index="day", columns="sentiment_cata", values="count").fillna(0)
     
-    st.write("### 📊 Sentiment Counts by Day")
+    st.write("###  Sentiment Counts by Day")
     fig, ax = plt.subplots(figsize=(12, 6))
     pivot_table_day.plot(kind='bar', ax=ax, colormap='plasma')
     ax.set_title("Sentiment Counts by Day", fontsize=14, fontweight='bold')
@@ -385,25 +385,25 @@ elif selected_view == "Daily Trends":
 st.divider()
 publisher_sentiment = sentiment_data.groupby('publisher')['sentiment'].mean().sort_values()
 
-st.title("📅 **Monthly Sentiment Trend Analysis**")
+st.title("**Monthly Sentiment Trend Analysis**")
 st.write("Explore how **average sentiment scores** fluctuate over months.")
 
 monthly_sentiment = sentiment_data['sentiment'].resample('ME').mean().dropna()
 
-st.subheader("📊 **Key Insights**")
+st.subheader("**Key Insights**")
 if not monthly_sentiment.empty:
     highest_month = monthly_sentiment.idxmax().strftime('%B %Y')
     lowest_month = monthly_sentiment.idxmin().strftime('%B %Y')
     col1, col2 = st.columns(2)
     with col1:
-        st.success(f"😊 **Highest Sentiment Month:** {highest_month} ({monthly_sentiment.max():.2f})")
+        st.success(f" **Highest Sentiment Month:** {highest_month} ({monthly_sentiment.max():.2f})")
     with col2:
-        st.error(f"😞 **Lowest Sentiment Month:** {lowest_month} ({monthly_sentiment.min():.2f})")
+        st.error(f"**Lowest Sentiment Month:** {lowest_month} ({monthly_sentiment.min():.2f})")
 else:
     st.warning("No data available for sentiment analysis.")
 
 # Plot Monthly Sentiment Trend
-st.write("### 📈 **Average Sentiment Score by Month**")
+st.write("###  **Average Sentiment Score by Month**")
 fig, ax = plt.subplots(figsize=(12, 6))
 ax.plot(monthly_sentiment.index, monthly_sentiment.values, marker='o', linestyle='-', color='#4B9CD3', label='Avg Sentiment')
 ax.fill_between(monthly_sentiment.index, monthly_sentiment.values, color='#D6EAF8', alpha=0.4)
@@ -426,7 +426,7 @@ sentiment_data["length_of_heading"] = sentiment_data["headline"].apply(len)
 sentiment_length = sentiment_data.groupby('sentiment_cata')['length_of_heading'].mean().sort_values().reset_index()
 
 # Streamlit Title and Description
-st.title("📰 **Average Headline Length by Sentiment Category**")
+st.title(" **Average Headline Length by Sentiment Category**")
 st.write("Explore how the **average length of headlines** varies across different sentiment categories.")
 
 # Plotting with Seaborn
@@ -440,7 +440,7 @@ sns.barplot(
 )
 
 # Customize Plot Aesthetics
-ax.set_title('📏 Average Headline Length by Sentiment Category', fontsize=14, fontweight='bold', pad=20)
+ax.set_title(' Average Headline Length by Sentiment Category', fontsize=14, fontweight='bold', pad=20)
 ax.set_xlabel('Sentiment Category', fontsize=12, fontweight='bold')
 ax.set_ylabel('Average Headline Length', fontsize=12, fontweight='bold')
 ax.bar_label(ax.containers[0], fmt='%.1f', fontsize=10, label_type='edge', padding=3)
@@ -458,7 +458,7 @@ keyword_df =pd.read_csv(data_path_keywords)
 keyword_counts = keyword_df['Keyword'].value_counts()
 
 
-st.title("☁️ **Word Cloud of Keywords**")
+st.title(" **Word Cloud of Keywords**")
 st.write("Visualize the most frequently occurring **keywords** in your dataset with this interactive Word Cloud.")
 
 
@@ -478,7 +478,7 @@ ax.imshow(wordcloud, interpolation='bilinear')
 ax.axis('off')
 st.pyplot(fig)
 plt.close(fig)
-st.markdown("### 📝 **Insights:**")
+st.markdown("### **Insights:**")
 st.write("""
 - Larger words indicate higher frequency.
 - Use this Word Cloud to quickly identify the most important keywords in your dataset.
@@ -498,17 +498,17 @@ data.sort_values('date', inplace=True)
 data.set_index('date', inplace=True)
 
 
-st.title("📰 **Article Publication Trends Dashboard**")
+st.title("**Article Publication Trends Dashboard**")
 st.write("Explore trends in article publications over different time periods.")
 
 
-st.title("🔄 **Select Trend View**")
+st.title(" **Select Trend View**")
 dataset_options=["Daily", "Monthly", "Yearly", "Hourly"]
 
 
 trend_option = st.selectbox("Choose Time Frame", dataset_options)
 
-st.subheader(f"📊 **Number of Articles Published Over {trend_option}**")
+st.subheader(f" **Number of Articles Published Over {trend_option}**")
 
 fig, ax = plt.subplots(figsize=(12, 6))
 sns.set_style("whitegrid")
@@ -569,7 +569,7 @@ elif selected_option == 'NAVD':
 st.write(f"Data for {selected_option}:")
 st.write("Explore the **Closing Price Trends** of the stock over time.")
 
-st.subheader("📊 **Stock Closing Price Over Time**")
+st.subheader(" **Stock Closing Price Over Time**")
 
 fig = go.Figure()
 
@@ -602,7 +602,7 @@ st.divider()
 data1['SMA_50'] = data1['Close'].rolling(window=50).mean()
 data1['SMA_200'] = data1['Close'].rolling(window=200).mean()
 
-st.title("📈 **Stock Price with Moving Averages**")
+st.title(" **Stock Price with Moving Averages**")
 st.write("Analyze **Stock Prices** along with **50-day** and **200-day Moving Averages**.")
 
 
@@ -634,7 +634,7 @@ fig.add_trace(go.Scatter(
 
 
 fig.update_layout(
-    title='📊 Stock Price with Moving Averages',
+    title='Stock Price with Moving Averages',
     xaxis_title='Date',
     yaxis_title='Price',
     legend_title='Legend',
@@ -667,7 +667,7 @@ def calculate_RSI(data, window=14):
 
 data1['RSI'] = calculate_RSI(data1['Close'].values)
 
-st.title("📊 **Relative Strength Index (RSI)**")
+st.title(" **Relative Strength Index (RSI)**")
 st.write("Analyze the **RSI Indicator** to identify overbought and oversold conditions in stock prices.")
 
 fig = go.Figure()
@@ -685,7 +685,7 @@ fig.add_hline(y=30, line_dash='dash', line_color='green', annotation_text='Overs
 
 
 fig.update_layout(
-    title='📈 Relative Strength Index (RSI)',
+    title=' Relative Strength Index (RSI)',
     xaxis_title='Date',
     yaxis_title='RSI Value',
     legend_title='Legend',
@@ -721,7 +721,7 @@ def calculate_MACD(data, short_window=12, long_window=26, signal_window=9):
 data1['MACD'], data1['Signal Line'], data1['MACD Histogram'] = calculate_MACD(data1['Close'].values)
 
 
-st.title("📊 **MACD (Moving Average Convergence Divergence)**")
+st.title("**MACD (Moving Average Convergence Divergence)**")
 st.write("""
 The **MACD Indicator** helps traders understand momentum and trend direction.
 It consists of:
@@ -758,7 +758,7 @@ fig.add_trace(go.Bar(
 
 
 fig.update_layout(
-    title='📈 Moving Average Convergence Divergence (MACD)',
+    title=' Moving Average Convergence Divergence (MACD)',
     xaxis_title='Date',
     yaxis_title='Value',
     legend_title='Legend',
@@ -845,7 +845,7 @@ data1["daily_return"] = data1["Close"].pct_change().fillna(0)
 
 
 
-st.title("📊 Daily Stock Returns Over Time")
+st.title("Daily Stock Returns Over Time")
 
 
 st.write("""
@@ -853,7 +853,7 @@ This interactive plot shows the daily stock returns across the entire dataset. H
 """)
 
 # Plot the Data
-st.subheader("📈 Interactive Daily Returns Plot")
+st.subheader(" Interactive Daily Returns Plot")
 fig = px.line(
     data1,
     x="Date",
@@ -891,7 +891,7 @@ data_merge = sentiment_data.merge(
 
 data_correlation=data_merge["sentiment_Average"].corr(data_merge["daily_return"], method="pearson")
 
-st.title("📊 Correlation Between Sentiment and Stock Returns")
+st.title("Correlation Between Sentiment and Stock Returns")
 
 # Description
 st.write("""
@@ -900,7 +900,7 @@ This visualization displays the full dataset without any filtering applied.
 """)
 
 # Subheader for Scatter Plot
-st.subheader("📈 Interactive Scatter Plot")
+st.subheader(" Interactive Scatter Plot")
 fig = px.scatter(
     data_merge,
     x='sentiment_Average',
@@ -928,7 +928,7 @@ st.divider()
 st.title('Sentiment and Stock Returns Heatmap')
 
 
-st.title("🔥 Heatmap of Sentiment and Daily Returns Correlation")
+st.title("Heatmap of Sentiment and Daily Returns Correlation")
 st.write("""
 Explore the correlation between sentiment scores and daily stock returns using an interactive heatmap.
 """)
@@ -941,7 +941,7 @@ if correlation_matrix.isnull().sum().sum() > 0:
     correlation_matrix = correlation_matrix.fillna(0)  # or handle as needed
 
 # Create the annotated heatmap
-st.subheader("📊 Correlation Heatmap")
+st.subheader(" Correlation Heatmap")
 fig = ff.create_annotated_heatmap(
     z=correlation_matrix.values,
     x=correlation_matrix.columns.tolist(),
