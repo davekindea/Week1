@@ -119,7 +119,7 @@ ax.set_xlabel("Url", fontsize=12)
 ax.set_ylabel("Count", fontsize=12)
 ax.set_title("Top 10  Count", fontsize=14)
 ax.tick_params(axis='x', rotation=90)
-plt.tight_()
+plt.tight_layout(pad=4.0)
 st.pyplot(fig)
 st.divider()
 data["date_format"] = data["date"].dt.date 
