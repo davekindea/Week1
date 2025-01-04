@@ -18,7 +18,6 @@ from PIL import Image
 import matplotlib
 import matplotlib.font_manager
 
-plt.rcParams['font.family'] = 'Arial'
 
 
 # Build the file path dynamically
