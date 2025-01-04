@@ -16,7 +16,7 @@ import plotly.express as px
 import plotly.figure_factory as ff
 from PIL import Image
 import matplotlib
-matplotlib.rcParams['font.family'] = 'DejaVu Sans' 
+matplotlib.rcParams['font.family'] = 'Noto Color Emoji' 
 
 
 
@@ -291,7 +291,7 @@ sentiment_data["month"] = sentiment_data.index.month
 sentiment_data["day"] = sentiment_data.index.day
 sentiment_data["WeekDay"] = sentiment_data.index.weekday
 sentiment_data["Hour"] = sentiment_data.index.hour
-sentiment_data["year_month"] = sentiment_data.index.to_period("M")
+sentiment_data["year_month"] = sentiment_data.index.tz_localize(None).to_period("M")
 
 year_sentiment_counts = sentiment_data.groupby(["year_month", "sentiment_cata"]).size().reset_index(name="count")
 pivot_table_yealy = year_sentiment_counts.pivot(index="year_month", columns="sentiment_cata", values="count").fillna(0)
@@ -434,7 +434,7 @@ ax.bar_label(ax.containers[0], fmt='%.1f', fontsize=10, label_type='edge', paddi
 
 sns.despine()
 plt.xticks(rotation=45, ha='right')
-plt._layout(pad=4.0) 
+fig.subplots_adjust(top=0.9, bottom=0.1)
 
 st.pyplot(fig)
 st.divider()
