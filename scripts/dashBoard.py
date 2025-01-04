@@ -424,6 +424,7 @@ sns.barplot(
     x=sentiment_length.index, 
     y=sentiment_length.values, 
     palette="coolwarm",
+     hue='sentiment_cata'
     edgecolor='black'
 )
 
