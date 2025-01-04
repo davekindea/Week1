@@ -16,7 +16,7 @@ import plotly.express as px
 import plotly.figure_factory as ff
 from PIL import Image
 import matplotlib
-matplotlib.rcParams['font.family'] = 'Noto Color Emoji' 
+
 
 
 
@@ -557,7 +557,7 @@ st.subheader("📊 **Stock Closing Price Over Time**")
 fig = go.Figure()
 
 fig.add_trace(go.Scatter(
-    x=data1.index,
+    x=data1["Date"],
     y=data1['Close'],
     mode='lines+markers',
     name='Close Price',
@@ -592,7 +592,7 @@ st.write("Analyze **Stock Prices** along with **50-day** and **200-day Moving Av
 fig = go.Figure()
 
 fig.add_trace(go.Scatter(
-    x=data1.index,
+    x=data1["Date"],
     y=data1['Close'],
     mode='lines',
     name='Close Price',
@@ -600,7 +600,7 @@ fig.add_trace(go.Scatter(
 ))
 
 fig.add_trace(go.Scatter(
-    x=data1.index,
+    x=data1["Date"],
     y=data1['SMA_50'],
     mode='lines',
     name='50-day SMA',
@@ -608,7 +608,7 @@ fig.add_trace(go.Scatter(
 ))
 
 fig.add_trace(go.Scatter(
-    x=data1.index,
+    x=data1["Date"],
     y=data1['SMA_200'],
     mode='lines',
     name='200-day SMA',
@@ -656,7 +656,7 @@ st.write("Analyze the **RSI Indicator** to identify overbought and oversold cond
 fig = go.Figure()
 
 fig.add_trace(go.Scatter(
-    x=data1.index,
+    x=data1["Date"],
     y=data1['RSI'],
     mode='lines',
     name='RSI',
@@ -716,7 +716,7 @@ It consists of:
 fig = go.Figure()
 
 fig.add_trace(go.Scatter(
-    x=data1.index,
+    x=data1["Date"],
     y=data1['MACD'],
     mode='lines',
     name='MACD',
@@ -725,7 +725,7 @@ fig.add_trace(go.Scatter(
 
 
 fig.add_trace(go.Scatter(
-    x=data1.index,
+    x=data1["Date"],
     y=data1['Signal Line'],
     mode='lines',
     name='Signal Line',
@@ -733,7 +733,7 @@ fig.add_trace(go.Scatter(
 ))
 
 fig.add_trace(go.Bar(
-    x=data1.index,
+    x=data1["Date"],
     y=data1['MACD Histogram'],
     name='MACD Histogram',
     marker=dict(color='gray')
@@ -760,7 +760,7 @@ st.divider()
 sns.set(style="whitegrid")
 data1['ROC'] = data1['Close'].pct_change(periods=12) * 100
 fig, ax = plt.subplots(figsize=(12, 6))
-ax.plot(data1.index, data1['ROC'], label='Rate of Change (ROC)', color='#FF6F61', linewidth=2)
+ax.plot(data1["Date"], data1['ROC'], label='Rate of Change (ROC)', color='#FF6F61', linewidth=2)
 
 
 ax.set_title('Rate of Change (ROC) Over Time', fontsize=18, fontweight='bold', color='#333333')
@@ -796,7 +796,7 @@ data1['RSI'] = compute_rsi(data1, window=14)
 
 fig, ax = plt.subplots(figsize=(14, 7))
 
-ax.plot(data1.index, data1['RSI'], label='RSI', color='#800080', linewidth=2)
+ax.plot(data1["Date"], data1['RSI'], label='RSI', color='#800080', linewidth=2)
 
 ax.axhline(70, color='red', linestyle='--', label='Overbought (70)', linewidth=1.5)
 ax.axhline(30, color='green', linestyle='--', label='Oversold (30)', linewidth=1.5)
