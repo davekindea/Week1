@@ -109,6 +109,7 @@ ax.tick_params(axis='x', rotation=45)
 fig.subplots_adjust(top=0.9, bottom=0.1)
 
 st.pyplot(fig)
+plt.close(fig)
 st.divider()
 publishers_by_url = data['url'].value_counts()
 publisher_count_url=publishers_by_url.reset_index()
@@ -125,6 +126,7 @@ ax.tick_params(axis='x', rotation=90)
 fig.subplots_adjust(top=0.9, bottom=0.1)
 
 st.pyplot(fig)
+plt.close(fig)
 st.divider()
 data["date_format"] = data["date"].dt.date 
 publication_date = data.groupby('date_format').size().reset_index(name='count')  
@@ -143,6 +145,7 @@ ax.yaxis.grid(True, linestyle='--', alpha=0.5)
 fig.subplots_adjust(top=0.9, bottom=0.1)
 
 st.pyplot(fig)
+plt.close(fig)
 
 st.divider()
 data.set_index('date', inplace=True)
@@ -159,7 +162,7 @@ ax.yaxis.grid(True, linestyle='--', alpha=0.5)
 fig.subplots_adjust(top=0.9, bottom=0.1)
  
 st.pyplot(fig)
-
+plt.close(fig)
 st.divider()
 yearly_count = publication_date.groupby('Year').size().reset_index(name='count')
 st.subheader("📆 **Number of Publications per Year**")
@@ -176,7 +179,7 @@ ax.yaxis.grid(True, linestyle='--', alpha=0.5)
 fig.subplots_adjust(top=0.9, bottom=0.1)
  
 st.pyplot(fig)
-
+plt.close(fig)
 st.divider()
 monthly_count = publication_date.groupby('Month').size().reset_index(name='count')
 month_labels = [
@@ -203,7 +206,7 @@ ax.yaxis.grid(True, linestyle='--', alpha=0.5)
 fig.subplots_adjust(top=0.9, bottom=0.1)
 
 st.pyplot(fig)
-
+plt.close(fig)
 st.divider()
 daily_count = publication_date.groupby('Day').size().reset_index(name='count')
 
@@ -226,6 +229,7 @@ ax.yaxis.grid(True, linestyle='--', alpha=0.5)
 fig.subplots_adjust(top=0.9, bottom=0.1)
 
 st.pyplot(fig)
+plt.close(fig)
 st.divider()
 data.reset_index(inplace=True)
 data['date'] = pd.to_datetime(data['date'], errors='coerce')
@@ -258,7 +262,7 @@ ax.yaxis.grid(True, linestyle='--', alpha=0.5)
 fig.subplots_adjust(top=0.9, bottom=0.1)
  
 st.pyplot(fig)
-
+plt.close(fig)
 st.divider()
 
 st.subheader("Text Analysis(Sentiment analysis & Topic Modeling)")
@@ -326,6 +330,7 @@ if selected_view == "Yearly Trends":
     ax.grid(True, linestyle='--', alpha=0.5)
     
     st.pyplot(fig)
+    plt.close(fig)
 
     # Bar Plot
     st.write("### 📊 Sentiment Counts by Year")
@@ -338,6 +343,7 @@ if selected_view == "Yearly Trends":
     fig.subplots_adjust(top=0.9, bottom=0.1)
 
     st.pyplot(fig)
+    plt.close(fig)
 
 # ---- Monthly Trends ----
 elif selected_view == "Monthly Trends":
@@ -355,6 +361,7 @@ elif selected_view == "Monthly Trends":
     plt.xticks(rotation=45)
     fig.subplots_adjust(top=0.9, bottom=0.1)
     st.pyplot(fig)
+    plt.close(fig)
 
 # ---- Daily Trends ----
 elif selected_view == "Daily Trends":
@@ -373,6 +380,7 @@ elif selected_view == "Daily Trends":
     fig.subplots_adjust(top=0.9, bottom=0.1)
 
     st.pyplot(fig)
+    plt.close(fig)
 st.divider()
 publisher_sentiment = sentiment_data.groupby('publisher')['sentiment'].mean().sort_values()
 
@@ -409,6 +417,7 @@ fig.subplots_adjust(top=0.9, bottom=0.1)
 
 
 st.pyplot(fig)
+plt.close(fig)
 
 st.divider()
 
@@ -440,6 +449,7 @@ plt.xticks(rotation=45, ha='right')
 fig.subplots_adjust(top=0.9, bottom=0.1)
 
 st.pyplot(fig)
+plt.close(fig)
 st.divider()
 
 keyword_df =pd.read_csv(data_path_keywords)
@@ -465,6 +475,7 @@ fig, ax = plt.subplots(figsize=(12, 6))
 ax.imshow(wordcloud, interpolation='bilinear')
 ax.axis('off')
 st.pyplot(fig)
+plt.close(fig)
 st.markdown("### 📝 **Insights:**")
 st.write("""
 - Larger words indicate higher frequency.
@@ -527,6 +538,7 @@ ax.set_xlabel(trend_option, fontsize=12)
 ax.set_ylabel('Number of Articles', fontsize=12)
 ax.tick_params(axis='x', rotation=45)
 st.pyplot(fig)
+plt.close(fig)
 st.divider()
 
 
@@ -778,6 +790,7 @@ st.subheader('Rate of Change (ROC) - A Financial Indicator')
 st.markdown("This plot shows the rate of change of the closing prices over a period of 12 time units (e.g., days, months).")
 
 st.pyplot(fig)
+plt.close(fig)
 st.divider()
 
 
@@ -821,6 +834,7 @@ The RSI is used to identify overbought and oversold conditions in a market.
 
 
 st.pyplot(fig)
+plt.close(fig)
 st.divider()
 
 
