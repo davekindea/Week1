@@ -104,7 +104,8 @@ ax.set_xlabel("Publisher Name", fontsize=12)
 ax.set_ylabel("Count", fontsize=12)
 ax.set_title("Top 10 Publisher Count", fontsize=14)
 ax.tick_params(axis='x', rotation=45)
-plt.tight_layout(pad=4.0) 
+fig.subplots_adjust(top=0.9, bottom=0.1)
+
 st.pyplot(fig)
 st.divider()
 publishers_by_url = data['url'].value_counts()
@@ -119,7 +120,8 @@ ax.set_xlabel("Url", fontsize=12)
 ax.set_ylabel("Count", fontsize=12)
 ax.set_title("Top 10  Count", fontsize=14)
 ax.tick_params(axis='x', rotation=90)
-plt.tight_layout(pad=4.0)
+fig.subplots_adjust(top=0.9, bottom=0.1)
+
 st.pyplot(fig)
 st.divider()
 data["date_format"] = data["date"].dt.date 
@@ -136,7 +138,8 @@ ax.set_ylabel('Number of Publications', fontsize=12, fontweight='bold')
 ax.set_title('📈 Trend of Publications Per Day', fontsize=14, fontweight='bold', pad=20)
 ax.tick_params(axis='x', rotation=45, labelsize=10)
 ax.yaxis.grid(True, linestyle='--', alpha=0.5)
-plt.tight_layout(pad=4.0) 
+fig.subplots_adjust(top=0.9, bottom=0.1)
+
 st.pyplot(fig)
 
 st.divider()
@@ -151,7 +154,8 @@ ax.set_title('📊 Monthly Trend of Published Articles', fontsize=14, fontweight
 ax.legend(fontsize=10, loc='upper left')
 ax.tick_params(axis='x', rotation=45, labelsize=10)
 ax.yaxis.grid(True, linestyle='--', alpha=0.5)
-plt.tight_layout(pad=4.0) 
+fig.subplots_adjust(top=0.9, bottom=0.1)
+ 
 st.pyplot(fig)
 
 st.divider()
@@ -167,7 +171,8 @@ for bar in bars:
     ax.text(bar.get_x() + bar.get_width()/2, yval + 1, int(yval), ha='center', va='bottom', fontsize=10, color='black')
 ax.tick_params(axis='x', rotation=45, labelsize=10)
 ax.yaxis.grid(True, linestyle='--', alpha=0.5)
-plt.tight_layout(pad=4.0) 
+fig.subplots_adjust(top=0.9, bottom=0.1)
+ 
 st.pyplot(fig)
 
 st.divider()
@@ -193,7 +198,8 @@ ax.tick_params(axis='x', rotation=45, labelsize=10)
 ax.set_xticks(range(len(monthly_count)))
 ax.set_xticklabels(monthly_count['Month'])
 ax.yaxis.grid(True, linestyle='--', alpha=0.5)
-plt.tight_layout(pad=4.0) 
+fig.subplots_adjust(top=0.9, bottom=0.1)
+
 st.pyplot(fig)
 
 st.divider()
@@ -215,7 +221,8 @@ ax.tick_params(axis='x', rotation=45, labelsize=10)
 ax.set_xticks(range(len(daily_count)))
 ax.set_xticklabels(daily_count['Day'])
 ax.yaxis.grid(True, linestyle='--', alpha=0.5)
-plt.tight_layout(pad=4.0) 
+fig.subplots_adjust(top=0.9, bottom=0.1)
+
 st.pyplot(fig)
 st.divider()
 data.reset_index(inplace=True)
@@ -246,7 +253,8 @@ for bar in bars:
     ax.text(bar.get_x() + bar.get_width()/2, yval + 1, int(yval), ha='center', va='bottom', fontsize=10, color='black')
 ax.tick_params(axis='x', rotation=45, labelsize=10)
 ax.yaxis.grid(True, linestyle='--', alpha=0.5)
-plt.tight_layout(pad=4.0) 
+fig.subplots_adjust(top=0.9, bottom=0.1)
+ 
 st.pyplot(fig)
 
 st.divider()
@@ -270,7 +278,8 @@ plt.title("Sentiment Category Count", fontsize=14, fontweight='bold')
 plt.xticks(rotation=45, ha="right")
 
 
-plt.tight_layout(pad=4.0) 
+fig.subplots_adjust(top=0.9, bottom=0.1)
+
 st.pyplot(plt)
 st.dataframe(sentiment_data.head(10))
 st.divider()
@@ -324,7 +333,8 @@ if selected_view == "Yearly Trends":
     ax.set_xlabel("Year", fontsize=12)
     ax.set_ylabel("Count", fontsize=12)
     plt.xticks(rotation=45)
-    plt.tight_layout(pad=4.0) 
+    fig.subplots_adjust(top=0.9, bottom=0.1)
+
     st.pyplot(fig)
 
 # ---- Monthly Trends ----
@@ -341,7 +351,7 @@ elif selected_view == "Monthly Trends":
     ax.set_xlabel("Month", fontsize=12)
     ax.set_ylabel("Count", fontsize=12)
     plt.xticks(rotation=45)
-    plt.tight_()
+    fig.subplots_adjust(top=0.9, bottom=0.1)
     st.pyplot(fig)
 
 # ---- Daily Trends ----
@@ -358,7 +368,8 @@ elif selected_view == "Daily Trends":
     ax.set_xlabel("Day", fontsize=12)
     ax.set_ylabel("Count", fontsize=12)
     plt.xticks(rotation=45)
-    plt.tight_layout(pad=4.0) 
+    fig.subplots_adjust(top=0.9, bottom=0.1)
+
     st.pyplot(fig)
 st.divider()
 publisher_sentiment = sentiment_data.groupby('publisher')['sentiment'].mean().sort_values()
@@ -392,7 +403,8 @@ ax.set_ylabel('Average Sentiment Score', fontsize=12)
 ax.legend(loc='upper right')
 ax.grid(True, linestyle='--', alpha=0.5)
 plt.xticks(rotation=45, ha='right')
-plt.tight_layout(pad=4.0) 
+fig.subplots_adjust(top=0.9, bottom=0.1)
+
 
 st.pyplot(fig)
 
@@ -422,7 +434,7 @@ ax.bar_label(ax.containers[0], fmt='%.1f', fontsize=10, label_type='edge', paddi
 
 sns.despine()
 plt.xticks(rotation=45, ha='right')
-plt.tight_layout(pad=4.0) 
+plt._layout(pad=4.0) 
 
 st.pyplot(fig)
 st.divider()
