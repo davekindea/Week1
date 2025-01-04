@@ -36,8 +36,7 @@ sn_data_path=os.path.join(current_dir, "../notebooks/data/sentiment_data.csv")
 st.set_page_config(page_title="Nova Financial Solutions", page_icon=":bar-chart:", layout="wide", initial_sidebar_state="expanded" )
 
 
-
-plt.rcParams['font.family'] = 'Noto Sans CJK JP'
+plt.rcParams.pop('font.family', None)
 
 
 
@@ -425,7 +424,7 @@ st.divider()
 sentiment_data["length_of_heading"] = sentiment_data["headline"].apply(len)
 sentiment_length = sentiment_data.groupby('sentiment_cata')['length_of_heading'].mean().sort_values().reset_index()
 
-# Streamlit title and description
+# Streamlit Title and Description
 st.title("📰 **Average Headline Length by Sentiment Category**")
 st.write("Explore how the **average length of headlines** varies across different sentiment categories.")
 
@@ -439,7 +438,7 @@ sns.barplot(
     edgecolor='black'
 )
 
-# Customize plot aesthetics
+# Customize Plot Aesthetics
 ax.set_title('📏 Average Headline Length by Sentiment Category', fontsize=14, fontweight='bold', pad=20)
 ax.set_xlabel('Sentiment Category', fontsize=12, fontweight='bold')
 ax.set_ylabel('Average Headline Length', fontsize=12, fontweight='bold')
@@ -449,7 +448,7 @@ sns.despine()
 plt.xticks(rotation=45, ha='right')
 fig.subplots_adjust(top=0.9, bottom=0.1)
 
-# Display plot in Streamlit
+# Display Plot in Streamlit
 st.pyplot(fig)
 plt.close(fig)
 st.divider()
