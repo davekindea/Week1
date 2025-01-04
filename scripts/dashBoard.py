@@ -17,7 +17,7 @@ import plotly.figure_factory as ff
 from PIL import Image
 import matplotlib
 import matplotlib.font_manager
-
+import matplotlib as mpl
 
 
 # Build the file path dynamically
@@ -36,7 +36,8 @@ sn_data_path=os.path.join(current_dir, "../notebooks/data/sentiment_data.csv")
 st.set_page_config(page_title="Nova Financial Solutions", page_icon=":bar-chart:", layout="wide", initial_sidebar_state="expanded" )
 
 
-plt.rcParams.pop('font.family', None)
+
+mpl.rcdefaults()
 
 
 
