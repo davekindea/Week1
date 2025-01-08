@@ -436,6 +436,7 @@ sns.barplot(
     x='sentiment_cata',
     y='length_of_heading',
     palette="coolwarm",
+    hue='sentiment_cata',
     edgecolor='black',
     legend=False  # Explicitly disable legend since hue isn't used
 )
